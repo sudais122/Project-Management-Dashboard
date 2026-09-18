@@ -1,13 +1,11 @@
+import Aside from "./components/aside.jsx";
+import Header from "./components/header.jsx";
 function App() {
   return (
-    <div className="flex flex-col items-left">
-      <h1 className="bg-sky-800 ">
-        Project Management Dashboard
-      </h1>
-
-      <p className="">
-        Tailwind CSS is working!
-      </p>
+    <div>
+      <Aside />
+      <Header />
+      {/* Your dashboard here */}
     </div>
   );
 }
