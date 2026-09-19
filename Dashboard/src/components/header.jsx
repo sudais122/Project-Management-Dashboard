@@ -8,9 +8,10 @@ import { useLocation } from "react-router-dom";
 const Header = () => {
   const location = useLocation();
 
-  const pageName = location.pathname
-    .replace("/", "")
-    .replace(/^\w/, (c) => c.toUpperCase());
+  const pageName =
+    location.pathname
+      .split("/")[1]
+      ?.replace(/^\w/, (c) => c.toUpperCase()) || "Dashboard";
 
   return (
     <header className="bg-white border-b border-gray-200 pl-5 px-10 w-full h-20 flex items-center justify-between">

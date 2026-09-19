@@ -8,6 +8,7 @@ import { Calender } from "./pages/Calender.jsx";
 import { Settings } from "./pages/Settings.jsx";
 import { Team } from "./pages/Team.jsx";
 import { Projects } from "./pages/Projects.jsx";
+import ProjectDetails from "./components/projects/ProjectDetailsHeader.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route element={<DashboardLayout />}>
         <Route path="/" element={<Main />} />
         <Route path="/Projects" element={<Projects />} />
+        <Route path="Projects/:projectID" element={<ProjectDetails />} />
         <Route path="/Tasks" element={<Tasks />} />
         <Route path="/Team" element={<Team />} />
         <Route path="/Calendar" element={<Calender />} />

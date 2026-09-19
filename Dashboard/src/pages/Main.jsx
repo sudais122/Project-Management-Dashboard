@@ -96,6 +96,7 @@ const recentTasks = [
   },
 ];
 
+
 const Main = () => {
   return (
     <div className="px-7 py-6">
