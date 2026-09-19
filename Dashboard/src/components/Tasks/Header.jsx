@@ -1,7 +1,7 @@
 import React from "react";
 import Create from "./Create";
 
-const Header = () => {
+const Header = ({text}) => {
 
   return (
     <div className="flex items-center justify-between ">
@@ -9,6 +9,7 @@ const Header = () => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
       </div>
+
       {/* Right side */}
       <div>
         <Create />
