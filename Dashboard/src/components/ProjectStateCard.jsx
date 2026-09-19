@@ -1,22 +1,119 @@
+
 import { SlCalender } from "react-icons/sl";
 
-export const ProjectStateCard = ({title, status, description, dueDate}) => {
+const getStatusBadgeColor = (status) => {
+  if (status === "In review") {
+    return "bg-yellow-50 text-yellow-700";
+  }
+
+  if (status === "Completed") {
+    return "bg-green-50 text-green-700";
+  }
+
+  if (status === "In progress") {
+    return "bg-blue-50 text-blue-700";
+  }
+
+  return "bg-gray-50 text-gray-700";
+};
+
+const getStatusDotColor = (status) => {
+  if (status === "In review") {
+    return "bg-yellow-500";
+  }
+
+  if (status === "Completed") {
+    return "bg-green-500";
+  }
+
+  if (status === "In progress") {
+    return "bg-blue-500";
+  }
+
+  return "bg-gray-500";
+};
+
+const getCompletionColor = (percentage) => {
+  if (percentage >= 80) {
+    return "bg-green-500";
+  }
+
+  if (percentage >= 50) {
+    return "bg-yellow-500";
+  }
+
+  return "bg-red-500";
+};
+
+export const ProjectStateCard = ({
+  title,
+  status,
+  description,
+  progress,
+  dueDate,
+}) => {
+  const clampedProgress = Math.min(100, Math.max(0, progress ?? 0));
+
   return (
     <div className="flex-1 rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-gray-300 hover:shadow-md">
+
+      {/* Title + Status */}
       <div className="flex items-start justify-between gap-3">
-        <h3 className="font-semibold text-gray-900">{title}</h3>
-        <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+        <h3 className="font-semibold text-gray-900">
+          {title}
+        </h3>
+
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium ${getStatusBadgeColor(
+            status
+          )}`}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${getStatusDotColor(
+              status
+            )}`}
+          ></span>
+
           {status}
         </span>
       </div>
 
-      <p className="mt-2 text-sm text-gray-500">{description}</p>
+      {/* Description */}
+      <p className="mt-2 text-[12px] text-gray-500">
+        {description}
+      </p>
 
-      <div className="mt-4 h-2 w-full rounded-full bg-gray-100">
-        <div className="h-2 w-2/3 rounded-full bg-blue-600"></div>
+      {/* Progress */}
+      <div className="mt-4">
+
+        {/* Progress Percentage */}
+        <div className="mb-2 flex justify-between text-xs">
+          <span className="text-gray-400">
+            Progress
+          </span>
+
+          <span className="font-medium text-gray-600">
+            {clampedProgress}%
+          </span>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="h-2 w-full rounded-full bg-gray-100">
+          <div
+            className={`h-2 rounded-full ${getCompletionColor(
+              clampedProgress
+            )}`}
+            style={{ width: `${clampedProgress}%` }}
+          ></div>
+        </div>
       </div>
 
-      <p className="mt-4 text-xs text-gray-400 flex gap-1.5 items-center"><SlCalender />Due {dueDate}</p>
+      {/* Due Date */}
+      <p className="mt-4 flex items-center gap-1.5 text-xs text-gray-400">
+        <SlCalender />
+        Due {dueDate}
+      </p>
+
     </div>
   );
 };
