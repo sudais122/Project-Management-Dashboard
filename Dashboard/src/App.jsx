@@ -1,28 +1,28 @@
-import Aside from "./components/aside.jsx";
-import Header from "./components/header.jsx";
-import { Dashboard } from "./pages/Dashboard.jsx";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import DashboardLayout from "./layout/DashboardLayout.jsx";
+
+import Main from "./pages/Main.jsx";
+import { Tasks } from "./pages/Tasks.jsx";
+import { Calender } from "./pages/Calender.jsx";
+import { Settings } from "./pages/Settings.jsx";
+import { Team } from "./pages/Team.jsx";
+import { Projects } from "./pages/Projects.jsx";
 
 function App() {
   return (
-    <div className="flex h-screen">
-
-      {/* Sidebar */}
-      <Aside />
-
-      {/* Main area */}
-      <div className="flex flex-col flex-1">
-
-        {/* Header */}
-        <Header />
-
-        {/* Dashboard */}
-        <main className="flex-1 overflow-auto px-4">
-          <Dashboard />
-        </main>
-
-      </div>
-
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route element={<DashboardLayout />}>
+        <Route path="/" element={<Main />} />
+        <Route path="/Projects" element={<Projects />} />
+        <Route path="/Tasks" element={<Tasks />} />
+        <Route path="/Team" element={<Team />} />
+        <Route path="/Calendar" element={<Calender />} />
+        <Route path="/Settings" element={<Settings />} />
+      </Route>
+    </Routes>
+    </BrowserRouter>
   );
 }
 

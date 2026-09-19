@@ -96,7 +96,7 @@ const recentTasks = [
   },
 ];
 
-export const Dashboard = () => {
+const Main = () => {
   return (
     <div className="px-7 py-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -127,3 +127,5 @@ export const Dashboard = () => {
     </div>
   );
 };
+
+export default Main;

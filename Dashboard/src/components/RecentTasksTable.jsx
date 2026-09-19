@@ -4,7 +4,7 @@ import RecentTaska from "./RecentTaska";
 const RecentTasksTable = ({ tasks }) => {
   return (
     <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-      <table className="w-full min-w-[800px]">
+      <table className="w-full min-w">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50 text-left">
             <th className="px-3 py-3 text-sm font-semibold text-gray-600">Task</th>
