@@ -4,7 +4,7 @@ import ProjectHeader from "../components/projects/ProjectHeader";
 import { SearchProject } from "../components/projects/SearchProject";
 import { ProjectCard } from "../components/projects/ProjectCard";
 
-const projects = [
+export const projects = [
   {
     id: 1,
     title: "Website Redesign",

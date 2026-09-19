@@ -8,7 +8,7 @@ import { Calender } from "./pages/Calender.jsx";
 import { Settings } from "./pages/Settings.jsx";
 import { Team } from "./pages/Team.jsx";
 import { Projects } from "./pages/Projects.jsx";
-import ProjectDetails from "./components/projects/ProjectDetailsHeader.jsx";
+import { ProjectDetails } from "./pages/ProjectDetails.jsx";
 
 function App() {
   return (
