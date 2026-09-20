@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import ProjectHeader from "../components/projects/ProjectHeader";
 import { SearchProject } from "../components/projects/SearchProject";
@@ -16,7 +16,6 @@ export const projects = [
     doneTasks: 17,
     dueDate: "Oct 1",
   },
-
   {
     id: 2,
     title: "Mobile App",
@@ -28,7 +27,6 @@ export const projects = [
     doneTasks: 14,
     dueDate: "Oct 15",
   },
-
   {
     id: 3,
     title: "Dashboard Analytics",
@@ -40,10 +38,8 @@ export const projects = [
     doneTasks: 20,
     dueDate: "Sep 20",
   },
-
   {
     id: 4,
-
     title: "E-commerce Platform",
     status: "In progress",
     description:
@@ -53,7 +49,6 @@ export const projects = [
     doneTasks: 29,
     dueDate: "Oct 22",
   },
-
   {
     id: 5,
     title: "CRM System",
@@ -65,7 +60,6 @@ export const projects = [
     doneTasks: 20,
     dueDate: "Nov 5",
   },
-
   {
     id: 6,
     title: "Task Management App",
@@ -80,16 +74,35 @@ export const projects = [
 ];
 
 export const Projects = () => {
+  const [search, setSearch] = useState("");
+
+  const filteredProjects = projects.filter((project) =>
+    `${project.title} ${project.description}`
+      .toLowerCase()
+      .includes(search.toLowerCase()),
+  );
+
   return (
-    <div className="space-y-6 p-6" >
+    <div className="space-y-6 p-6">
       <ProjectHeader />
 
-      <SearchProject />
+      <SearchProject search={search} setSearch={setSearch} />
 
       <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {projects.map((project) => (
-          <ProjectCard key={project.title} {...project} />
-        ))}
+          {filteredProjects.length === 0 ? (
+            <div className="col-span-full py-10 text-center">
+              <p className="text-lg font-semibold text-gray-700">
+                No projects found
+              </p>
+              <p className="mt-1 text-sm text-gray-400">
+                Try searching with a different keyword.
+              </p>
+            </div>
+          ) : (
+            filteredProjects.map((project) => (
+              <ProjectCard key={project.id} {...project} />
+            ))
+          )}
       </div>
     </div>
   );

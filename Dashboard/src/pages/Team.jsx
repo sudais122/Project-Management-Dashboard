@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Header from "../components/Team/Header";
 import Topbar from "../components/Team/Topbar";
@@ -42,21 +42,46 @@ const teamMembers = [
   },
 ];
 
+
 export const Team = () => {
+  const [search, setsearch] = useState("");
+
+  const searchedTeam = teamMembers.filter((team) =>
+    team.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <Header />
 
       {/* Search + Filters */}
-      <Topbar />
+      <Topbar
+        search={search}
+        setSearch={setsearch}
+      />
 
       {/* Team Cards */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {teamMembers.map((teamMember) => (
-          <Card key={teamMember.name} {...teamMember} />
-        ))}
-      </div>
+      {searchedTeam.length === 0 ? (
+        <div className="py-10 text-center">
+          <p className="text-lg font-semibold text-gray-700">
+            No team members found
+          </p>
+
+          <p className="mt-1 text-sm text-gray-400">
+            Try searching with a different keyword.
+          </p>
+        </div>
+      ) : (
+        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {searchedTeam.map((team) => (
+            <Card
+              key={team.name}
+              {...team}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

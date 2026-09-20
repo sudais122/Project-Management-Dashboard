@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import Header from "../components/header";
 import Aside from "../components/aside";
 
 const DashboardLayout = () => {
+  const [search, setsearch] = useState("")
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -12,7 +13,10 @@ const DashboardLayout = () => {
 
       {/* Header + Page Content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header />
+        <Header 
+        search={search}
+        setsearch={setsearch}
+        />
 
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

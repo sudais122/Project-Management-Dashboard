@@ -6,11 +6,10 @@ import { useLocation } from "react-router-dom";
 import CreateProjectform from "./CreateProjectform";
 import { FiPlus, FiX } from "react-icons/fi";
 
-const Header = () => {
+const Header = ({search,setsearch}) => {
   const location = useLocation();
 
   const [isOpen, setIsOpen] = useState(false);
-
   const pageName =
     location.pathname.split("/")[1]?.replace(/^\w/, (c) => c.toUpperCase()) ||
     "Dashboard";
@@ -29,6 +28,8 @@ const Header = () => {
 
             <input
               type="text"
+              value={search}
+              onChange={(e) => setsearch(e.target.value)}
               placeholder="Search project, task..."
               className="w-full text-sm text-gray-700 outline-none placeholder:text-gray-400"
             />
