@@ -18,11 +18,20 @@ const Card = ({
     <div className="w-full rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       {/* Member Info */}
       <div className="flex items-start gap-4">
-        {/* Profile Initials */}
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
-          {initials}
+        {/* Profile + Role */}
+        <div className="flex w-12 shrink-0 flex-col items-center gap-2">
+          {/* Profile Initials */}
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
+            {initials}
+          </div>
+
+          {/* Role Badge */}
+          <span className="whitespace-nowrap rounded-full bg-blue-50 px-3 py-1 ml-25 mt-3 text-xs font-medium text-blue-700">
+            {role}
+          </span>
         </div>
 
+        {/* Member Details */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
             {name}
@@ -31,11 +40,6 @@ const Card = ({
           <p className="mt-1 text-sm text-gray-500">
             {email}
           </p>
-
-          {/* Role Badge */}
-          <span className="mt-2 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-            {role}
-          </span>
         </div>
       </div>
 

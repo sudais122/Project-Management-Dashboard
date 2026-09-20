@@ -1,9 +1,12 @@
 import React from 'react'
+import { Card } from '../components/settings/Card'
 
 export const Settings = () => {
   return (
     <>
-        <h1>this is settings</h1>
+        <>
+        <Card />
+        </>
     </>
   )
 }
