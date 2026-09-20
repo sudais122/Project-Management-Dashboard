@@ -4,7 +4,6 @@ import Header from "../components/Tasks/Header";
 import Table from "../components/Tasks/Table"
 import { TasksSearch } from "../components/Tasks/Search";
 import Filter from "../components/Tasks/Filter";
-
 const tasks = [
   {
     task: "Fix checkout validation errors",
