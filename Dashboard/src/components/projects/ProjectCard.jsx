@@ -52,7 +52,7 @@ export const ProjectCard = ({
   status,
   description,
   progress,
-  dueDate,
+  sortDate,
   totalTasks,
   doneTasks,
 }) => {
@@ -122,7 +122,7 @@ export const ProjectCard = ({
 
         <span className="flex items-center gap-1.5">
           <SlCalender />
-          Due {dueDate}
+          Due {sortDate}
         </span>
       </div>
 

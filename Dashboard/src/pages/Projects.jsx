@@ -14,7 +14,7 @@ export const projects = [
     progress: 68,
     totalTasks: 25,
     doneTasks: 17,
-    dueDate: "Oct 1",
+    sortDate: "2026-10-01",
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ export const projects = [
     progress: 45,
     totalTasks: 32,
     doneTasks: 14,
-    dueDate: "Oct 15",
+    sortDate: "2026-10-15",
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ export const projects = [
     progress: 100,
     totalTasks: 20,
     doneTasks: 20,
-    dueDate: "Sep 20",
+    sortDate: "2026-09-20",
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ export const projects = [
     progress: 72,
     totalTasks: 40,
     doneTasks: 29,
-    dueDate: "Oct 22",
+    sortDate: "2026-10-22",
   },
   {
     id: 5,
@@ -58,7 +58,7 @@ export const projects = [
     progress: 55,
     totalTasks: 36,
     doneTasks: 20,
-    dueDate: "Nov 5",
+    sortDate: "2026-11-05",
   },
   {
     id: 6,
@@ -69,40 +69,61 @@ export const projects = [
     progress: 82,
     totalTasks: 28,
     doneTasks: 23,
-    dueDate: "Oct 10",
+    sortDate: "2026-10-10",
   },
 ];
 
 export const Projects = () => {
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("Newest First");
 
   const filteredProjects = projects.filter((project) =>
     `${project.title} ${project.description}`
       .toLowerCase()
-      .includes(search.toLowerCase()),
+      .includes(search.toLowerCase())
   );
+
+  const sortedProjects = [...filteredProjects].sort((a, b) => {
+    if (sort === "Newest First") {
+      return new Date(b.sortDate) - new Date(a.sortDate);
+    }
+
+    if (sort === "Oldest First") {
+      return new Date(a.sortDate) - new Date(b.sortDate);
+    }
+
+    return 0;
+  });
+  console.log(sortedProjects)
 
   return (
     <div className="space-y-6 p-6">
-      <ProjectHeader />
+      <ProjectHeader onSortChange={setSort} />
 
-      <SearchProject search={search} setSearch={setSearch} />
+      <SearchProject
+        search={search}
+        setSearch={setSearch}
+      />
 
-      <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filteredProjects.length === 0 ? (
-            <div className="col-span-full py-10 text-center">
-              <p className="text-lg font-semibold text-gray-700">
-                No projects found
-              </p>
-              <p className="mt-1 text-sm text-gray-400">
-                Try searching with a different keyword.
-              </p>
-            </div>
-          ) : (
-            filteredProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
-            ))
-          )}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {sortedProjects.length === 0 ? (
+          <div className="col-span-full py-10 text-center">
+            <p className="text-lg font-semibold text-gray-700">
+              No projects found
+            </p>
+
+            <p className="mt-1 text-sm text-gray-400">
+              Try searching with a different keyword.
+            </p>
+          </div>
+        ) : (
+          sortedProjects.map((project) => (
+            <ProjectCard
+              key={project.id}
+              {...project}
+            />
+          ))
+        )}
       </div>
     </div>
   );

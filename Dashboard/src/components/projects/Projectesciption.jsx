@@ -83,7 +83,7 @@ const Projectesciption = () => {
             </p>
 
             <p className="text-sm font-medium text-gray-900">
-              {selectedProject?.dueDate}
+              {selectedProject?.sortDate}
             </p>
           </div>
 

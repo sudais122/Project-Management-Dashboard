@@ -19,7 +19,6 @@ export const SearchProject = ({search, setSearch}) => {
       </div>
 
       {/* Sort */}
-      <SortDate />
     </div>
   );
 };

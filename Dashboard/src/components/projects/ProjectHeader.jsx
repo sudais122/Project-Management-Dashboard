@@ -1,10 +1,9 @@
-import React from "react";
 import CreateProject from "../CreateProject";
+import SortDate from "./SortDate";
 
-const ProjectHeader = () => {
-
+const ProjectHeader = ({ onSortChange }) => {
   return (
-    <div className="flex items-center justify-between ">
+    <div className="flex items-center justify-between">
       {/* Left side */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
@@ -15,7 +14,8 @@ const ProjectHeader = () => {
       </div>
 
       {/* Right side */}
-      <div>
+      <div className="flex items-center gap-3">
+        <SortDate onChange={onSortChange} />
         <CreateProject />
       </div>
     </div>
