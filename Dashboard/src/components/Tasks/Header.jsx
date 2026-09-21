@@ -9,7 +9,6 @@ const Header = ({text}) => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
       </div>
-
       {/* Right side */}
       <div>
         <Create />

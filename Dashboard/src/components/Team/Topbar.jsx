@@ -1,17 +1,29 @@
-import React from 'react'
-import { TasksSearch } from '../Tasks/Search'
-import { TeamSearch } from './Search';
-import Filter from './Filter'
-const Topbar = () => {
+import React from "react";
+
+import { TeamSearch } from "./Search";
+import Filter from "./Filter";
+
+const Topbar = ({
+  search,
+  setSearch,
+  role,
+  setRole,
+}) => {
   return (
     <div className="flex w-full flex-wrap items-center gap-4">
       <div className="min-w-60 flex-1">
-        <TeamSearch />
+        <TeamSearch
+          search={search}
+          setSearch={setSearch}
+        />
       </div>
 
-      <Filter />
+      <Filter
+        role={role}
+        setRole={setRole}
+      />
     </div>
   );
 };
 
-export default Topbar
+export default Topbar;

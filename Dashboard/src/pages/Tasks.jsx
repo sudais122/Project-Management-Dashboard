@@ -56,11 +56,38 @@ const tasks = [
 export const Tasks = () => {
   const [search, setSearch] = useState("");
 
-  const filteredTasks = tasks.filter((task) =>
-    `${task.task}`
+  const [project, setProject] = useState("");
+  const [priority, setPriority] = useState("");
+  const [status, setStatus] = useState("");
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.task
       .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+      .includes(search.toLowerCase());
+
+    const matchesProject =
+      project === "" || task.project === project;
+
+    const matchesPriority =
+      priority === "" || task.priority === priority;
+
+    const matchesStatus =
+      status === "" || task.status === status;
+
+    return (
+      matchesSearch &&
+      matchesProject &&
+      matchesPriority &&
+      matchesStatus
+    );
+  });
+
+  const clearFilters = () => {
+    setSearch("");
+    setProject("");
+    setPriority("");
+    setStatus("");
+  };
 
   return (
     <div className="space-y-6">
@@ -75,7 +102,15 @@ export const Tasks = () => {
           />
         </div>
 
-        <Filter />
+        <Filter
+          project={project}
+          setProject={setProject}
+          priority={priority}
+          setPriority={setPriority}
+          status={status}
+          setStatus={setStatus}
+          clearFilters={clearFilters}
+        />
       </div>
 
       {/* Tasks Table */}
@@ -87,7 +122,7 @@ export const Tasks = () => {
             </p>
 
             <p className="mt-1 text-sm text-gray-400">
-              Try searching with a different keyword.
+              Try changing your search or filters.
             </p>
           </div>
         ) : (

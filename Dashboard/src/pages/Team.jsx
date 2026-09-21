@@ -12,6 +12,7 @@ const teamMembers = [
     assignedTasks: 8,
     activeProjects: 3,
   },
+
   {
     name: "Frontend Team",
     email: "frontend@example.com",
@@ -19,6 +20,7 @@ const teamMembers = [
     assignedTasks: 12,
     activeProjects: 4,
   },
+
   {
     name: "Design Team",
     email: "design@example.com",
@@ -26,6 +28,7 @@ const teamMembers = [
     assignedTasks: 6,
     activeProjects: 2,
   },
+
   {
     name: "Development Team",
     email: "development@example.com",
@@ -33,6 +36,7 @@ const teamMembers = [
     assignedTasks: 10,
     activeProjects: 3,
   },
+
   {
     name: "Product Team",
     email: "product@example.com",
@@ -42,13 +46,19 @@ const teamMembers = [
   },
 ];
 
-
 export const Team = () => {
-  const [search, setsearch] = useState("");
+  const [search, setSearch] = useState("");
+  const [role, setRole] = useState("");
 
-  const searchedTeam = teamMembers.filter((team) =>
-    team.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredTeam = teamMembers.filter((team) => {
+    const matchesSearch =
+      team.name.toLowerCase().includes(search.toLowerCase());
+
+    const matchesRole =
+      role === "" || team.role === role;
+
+    return matchesSearch && matchesRole;
+  });
 
   return (
     <div className="space-y-6">
@@ -58,11 +68,13 @@ export const Team = () => {
       {/* Search + Filters */}
       <Topbar
         search={search}
-        setSearch={setsearch}
+        setSearch={setSearch}
+        role={role}
+        setRole={setRole}
       />
 
       {/* Team Cards */}
-      {searchedTeam.length === 0 ? (
+      {filteredTeam.length === 0 ? (
         <div className="py-10 text-center">
           <p className="text-lg font-semibold text-gray-700">
             No team members found
@@ -74,7 +86,7 @@ export const Team = () => {
         </div>
       ) : (
         <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {searchedTeam.map((team) => (
+          {filteredTeam.map((team) => (
             <Card
               key={team.name}
               {...team}
