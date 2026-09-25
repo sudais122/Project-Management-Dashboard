@@ -38,6 +38,11 @@ export const Projects = () => {
       .includes(search.toLowerCase()),
   );
 
+  const handleDeleteProject = (id) => {
+    setProjects((currentProjects) =>
+      currentProjects.filter((project) => project.id !== id),
+    );
+  };
   const sortedProjects = [...filteredProjects].sort((a, b) => {
     if (sort === "Newest First") {
       return new Date(b.sortDate) - new Date(a.sortDate);
@@ -69,7 +74,11 @@ export const Projects = () => {
           </div>
         ) : (
           projects.map((project) => (
-            <ProjectCard key={project.id} {...project} />
+            <ProjectCard
+              key={project.id}
+              {...project}
+              onDelete={handleDeleteProject}
+            />
           ))
         )}
       </div>

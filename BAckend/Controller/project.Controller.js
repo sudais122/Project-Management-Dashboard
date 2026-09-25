@@ -95,3 +95,44 @@ export const getAllProjects = (req, res) => {
     });
   }
 };
+// DELETE project
+export const deleteProject = (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const fileData = fs.readFileSync(projectsFile, "utf-8");
+    const projects = JSON.parse(fileData);
+
+    const projectIndex = projects.findIndex(
+      (project) => project.id.toString() === id.toString()
+    );
+
+    if (projectIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    const deletedProject = projects.splice(projectIndex, 1)[0];
+
+    fs.writeFileSync(
+      projectsFile,
+      JSON.stringify(projects, null, 2)
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Project deleted successfully",
+      project: deletedProject,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete project",
+    });
+  }
+};
