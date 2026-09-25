@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { projects } from "../../pages/Projects";
+
 
 const getCompletionColor = (percentage) => {
   if (percentage >= 80) {

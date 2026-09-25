@@ -73,3 +73,25 @@ export const createProject = (req, res) => {
     });
   }
 };
+
+//get all projects
+export const getAllProjects = (req, res) => {
+  try {
+    const fileData = fs.readFileSync(projectsFile, "utf-8");
+
+    const projects = JSON.parse(fileData);
+
+    return res.status(200).json({
+      success: true,
+      count: projects.length,
+      projects,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch projects",
+    });
+  }
+};

@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.json({
-    message: "FYP Management System API is running",
+    message: " API is running",
   });
 });
 

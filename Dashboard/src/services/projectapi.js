@@ -13,3 +13,13 @@ export const createProject = async (projectData) => {
 
   return data;
 };
+
+export const getAllProjects = async () => {
+  const response = await fetch(API_URL, {
+    method: "GET",
+  });
+
+  const data = await response.json();
+
+  return data;
+};

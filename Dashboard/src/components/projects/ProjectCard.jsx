@@ -48,11 +48,11 @@ const getCompletionColor = (percentage) => {
 
 export const ProjectCard = ({
   id,
-  title,
+  projectName,
   status,
   description,
   progress,
-  sortDate,
+  endDate,
   totalTasks,
   doneTasks,
 }) => {
@@ -65,7 +65,7 @@ export const ProjectCard = ({
       {/* Title + Status */}
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-semibold text-gray-900">
-          {title}
+          {projectName}
         </h3>
 
         <span
@@ -122,7 +122,7 @@ export const ProjectCard = ({
 
         <span className="flex items-center gap-1.5">
           <SlCalender />
-          Due {sortDate}
+          Due {endDate}
         </span>
       </div>
 

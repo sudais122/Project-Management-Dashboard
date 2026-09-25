@@ -1,10 +1,20 @@
 import React, { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import CreateProjectform from "./CreateProjectform";
 
 const CreateProject = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [toast, setToast] = useState("");
 
+  const handleProjectCreated = () => {
+    setIsOpen(false);
+    setToast("Project created successfully");
+
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
+  };
   return (
     <>
       {/* Create Project Button */}
@@ -30,8 +40,14 @@ const CreateProject = () => {
               <FiX className="text-xl" />
             </button>
 
-            <CreateProjectform />
+            <CreateProjectform onClose={handleProjectCreated} />
           </div>
+        </div>
+      )}
+      {toast && (
+        <div className="fixed right-5 top-5 z-[100] flex items-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-lg">
+          <IoCheckmarkCircleSharp className="text-xl" />
+          <span>{toast}</span>
         </div>
       )}
     </>

@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 
-import { projects } from "../../pages/Projects";
 
 const getStatusBadgeColor = (status) => {
   if (status === "In review") {
