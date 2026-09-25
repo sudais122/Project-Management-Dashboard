@@ -1,0 +1,33 @@
+[
+  {
+    "id": "1790344708477",
+    "projectName": "Project Management Dashboard",
+    "description": "A dashboard for managing projects, tasks, team members, and project progress.",
+    "startDate": "2026-09-25",
+    "endDate": "2026-12-25",
+    "projectManager": "Ali",
+    "members": [
+      "Ahmed",
+      "Usman",
+      "Hamza"
+    ],
+    "status": "In Progress",
+    "createdAt": "2026-09-25T13:58:28.477Z"
+  },
+  {
+    "id": "1790350352336",
+    "projectName": "asda",
+    "description": "sadqd",
+    "startDate": "2026-09-25",
+    "endDate": "2026-10-09",
+    "projectManager": "sara",
+    "members": [
+      "ayesha",
+      "ali",
+      "sara",
+      "hamza"
+    ],
+    "status": "Completed",
+    "createdAt": "2026-09-25T15:32:32.336Z"
+  }
+]

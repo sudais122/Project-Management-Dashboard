@@ -1,7 +1,34 @@
 import React, { useState } from "react";
+import { createProject } from "../services/projectapi";
 
 const CreateProjectform = ({ onClose }) => {
+  const [projectName, setProjectName] = useState("");
+  const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [projectManager, setProjectManager] = useState("");
+  const [members, setMembers] = useState([]);
   const [status, setStatus] = useState("Planning");
+
+  const handleSubmit = async () => {
+    const projectData = {
+      projectName,
+      description,
+      startDate,
+      endDate,
+      projectManager,
+      members,
+      status,
+    };
+
+    const data = await createProject(projectData);
+
+    if (data.success) {
+      console.log("Project created:", data.project);
+    } else {
+      console.log("Error:", data.message);
+    }
+  };
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white">
@@ -10,6 +37,7 @@ const CreateProjectform = ({ onClose }) => {
         <h2 className="text-lg font-semibold text-gray-900">
           Create Project
         </h2>
+
         <p className="mt-1 text-xs text-gray-500">
           Create a new project and add the required details.
         </p>
@@ -22,8 +50,11 @@ const CreateProjectform = ({ onClose }) => {
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             Project Name
           </label>
+
           <input
             type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
             placeholder="e.g. Website Redesign"
             className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           />
@@ -34,8 +65,11 @@ const CreateProjectform = ({ onClose }) => {
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             Description
           </label>
+
           <textarea
             rows="2"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="What is this project about?"
             className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           />
@@ -47,8 +81,11 @@ const CreateProjectform = ({ onClose }) => {
             <label className="mb-1.5 block text-sm font-medium text-gray-700">
               Start Date
             </label>
+
             <input
               type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
               className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
@@ -57,8 +94,11 @@ const CreateProjectform = ({ onClose }) => {
             <label className="mb-1.5 block text-sm font-medium text-gray-700">
               End Date
             </label>
+
             <input
               type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
               className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             />
           </div>
@@ -69,13 +109,16 @@ const CreateProjectform = ({ onClose }) => {
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             Project Manager
           </label>
+
           <select
-            defaultValue=""
+            value={projectManager}
+            onChange={(e) => setProjectManager(e.target.value)}
             className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           >
             <option value="" disabled>
               Select project manager
             </option>
+
             <option value="ayesha">Ayesha Khan</option>
             <option value="ali">Ali Ahmed</option>
             <option value="sara">Sara Malik</option>
@@ -91,7 +134,15 @@ const CreateProjectform = ({ onClose }) => {
 
           <select
             multiple
-            className="h-20 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            value={members}
+            onChange={(e) => {
+              const selectedMembers = Array.from(
+                e.target.selectedOptions,
+                (option) => option.value
+              );
+
+              setMembers(selectedMembers);
+            }}
           >
             <option value="ayesha">Ayesha Khan</option>
             <option value="ali">Ali Ahmed</option>
@@ -112,7 +163,7 @@ const CreateProjectform = ({ onClose }) => {
           </label>
 
           <div className="flex gap-2">
-            {["Planning", "In Progress", "On Hold"].map((item) => (
+            {["In progress", "In review", "Completed"].map((item) => (
               <button
                 key={item}
                 type="button"
@@ -133,6 +184,7 @@ const CreateProjectform = ({ onClose }) => {
       {/* Actions */}
       <div className="flex justify-end gap-3 border-t border-gray-200 px-5 py-3">
         <button
+          onClick={handleSubmit}
           type="button"
           className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
         >

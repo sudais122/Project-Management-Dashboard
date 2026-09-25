@@ -94,7 +94,6 @@ export const Projects = () => {
 
     return 0;
   });
-  console.log(sortedProjects)
 
   return (
     <div className="space-y-6 p-6">
