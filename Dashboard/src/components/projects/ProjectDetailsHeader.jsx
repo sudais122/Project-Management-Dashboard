@@ -1,7 +1,6 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
-
 
 const getStatusBadgeColor = (status) => {
   if (status === "In review") {
@@ -35,22 +34,18 @@ const getStatusDotColor = (status) => {
   return "bg-gray-500";
 };
 
-const ProjectDetails = () => {
+const ProjectDetailsHeader = ({ project }) => {
   const navigate = useNavigate();
-  const { projectID } = useParams();
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const selectedProject = projects.find(
-    (item) => item.id === Number(projectID)
-  );
-
   return (
     <div className="flex items-start gap-5">
       {/* Back button */}
       <button
+        type="button"
         onClick={handleBack}
         className="mt-1 flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-900"
       >
@@ -63,22 +58,23 @@ const ProjectDetails = () => {
           {/* Project information */}
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {selectedProject?.title}
+              {project?.projectName}
             </h1>
           </div>
 
           {/* Status */}
           <span
             className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium ${getStatusBadgeColor(
-              selectedProject?.status
+              project?.status
             )}`}
           >
             <span
               className={`h-2 w-2 rounded-full ${getStatusDotColor(
-                selectedProject?.status
+                project?.status
               )}`}
             />
-            {selectedProject?.status}
+
+            {project?.status}
           </span>
         </div>
       </div>
@@ -86,4 +82,4 @@ const ProjectDetails = () => {
   );
 };
 
-export default ProjectDetails;
+export default ProjectDetailsHeader;

@@ -41,3 +41,24 @@ export const deleteProject = async (id) => {
 
   return data;
 };
+
+export const getProjectById = async (id) => {
+  try {
+    const response = await fetch(`/api/projects/${id}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch project");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Get project error:", error);
+
+    return {
+      success: false,
+      message: error.message || "Failed to fetch project",
+    };
+  }
+};

@@ -136,3 +136,36 @@ export const deleteProject = (req, res) => {
     });
   }
 };
+
+// GET single project
+export const getProjectById = (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const fileData = fs.readFileSync(projectsFile, "utf-8");
+    const projects = JSON.parse(fileData);
+
+    const project = projects.find(
+      (project) => project.id.toString() === id.toString()
+    );
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      project,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch project",
+    });
+  }
+};

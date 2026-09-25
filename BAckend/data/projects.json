@@ -15,22 +15,6 @@
     "createdAt": "2026-09-25T13:58:28.477Z"
   },
   {
-    "id": "1790350352336",
-    "projectName": "asda",
-    "description": "sadqd",
-    "startDate": "2026-09-25",
-    "endDate": "2026-10-09",
-    "projectManager": "sara",
-    "members": [
-      "ayesha",
-      "ali",
-      "sara",
-      "hamza"
-    ],
-    "status": "Completed",
-    "createdAt": "2026-09-25T15:32:32.336Z"
-  },
-  {
     "id": "1790350918148",
     "projectName": "wgfs",
     "description": "adfwe",
@@ -107,18 +91,5 @@
     ],
     "status": "In review",
     "createdAt": "2026-09-25T17:00:22.797Z"
-  },
-  {
-    "id": "1790364692747",
-    "projectName": "Website redsign",
-    "description": "na",
-    "startDate": "2026-10-03",
-    "endDate": "2026-10-08",
-    "projectManager": "ali",
-    "members": [
-      "ali"
-    ],
-    "status": "In review",
-    "createdAt": "2026-09-25T19:31:32.747Z"
   }
 ]
