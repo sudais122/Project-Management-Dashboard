@@ -1,23 +1,64 @@
 import React from "react";
 
 const PRIORITY_STYLES = {
-  High: { dot: "bg-red-500", bg: "bg-red-100", text: "text-red-600" },
-  Medium: { dot: "bg-yellow-500", bg: "bg-yellow-100", text: "text-yellow-700" },
-  Low: { dot: "bg-green-500", bg: "bg-green-100", text: "text-green-600" },
+  High: {
+    dot: "bg-red-500",
+    bg: "bg-red-100",
+    text: "text-red-600",
+  },
+
+  Medium: {
+    dot: "bg-yellow-500",
+    bg: "bg-yellow-100",
+    text: "text-yellow-700",
+  },
+
+  Low: {
+    dot: "bg-green-500",
+    bg: "bg-green-100",
+    text: "text-green-600",
+  },
 };
 
 const STATUS_STYLES = {
-  "In progress": { dot: "bg-blue-500", bg: "bg-blue-100", text: "text-blue-700" },
-  "In review": { dot: "bg-yellow-500", bg: "bg-yellow-100", text: "text-yellow-700" },
-  Completed: { dot: "bg-green-500", bg: "bg-green-100", text: "text-green-700" },
+  Todo: {
+    dot: "bg-gray-500",
+    bg: "bg-gray-100",
+    text: "text-gray-600",
+  },
+
+  "In Progress": {
+    dot: "bg-blue-500",
+    bg: "bg-blue-100",
+    text: "text-blue-700",
+  },
+
+  Review: {
+    dot: "bg-yellow-500",
+    bg: "bg-yellow-100",
+    text: "text-yellow-700",
+  },
+
+  Completed: {
+    dot: "bg-green-500",
+    bg: "bg-green-100",
+    text: "text-green-700",
+  },
 };
 
-const DEFAULT_STYLE = { dot: "bg-gray-400", bg: "bg-gray-100", text: "text-gray-600" };
+const DEFAULT_STYLE = {
+  dot: "bg-gray-400",
+  bg: "bg-gray-100",
+  text: "text-gray-600",
+};
 
-const getPriorityStyle = (priority) => PRIORITY_STYLES[priority] || DEFAULT_STYLE;
-const getStatusStyle = (status) => STATUS_STYLES[status] || DEFAULT_STYLE;
+const getPriorityStyle = (priority) =>
+  PRIORITY_STYLES[priority] || DEFAULT_STYLE;
 
-const RecentTasksTable = ({ tasks }) => {
+const getStatusStyle = (status) =>
+  STATUS_STYLES[status] || DEFAULT_STYLE;
+
+const RecentTasksTable = ({ tasks = [] }) => {
   return (
     <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
       <table className="w-full min-w-[900px]">
@@ -58,7 +99,7 @@ const RecentTasksTable = ({ tasks }) => {
 
             return (
               <tr
-                key={task.task}
+                key={task.id}
                 className="border-b border-gray-100 last:border-0 hover:bg-gray-50"
               >
                 {/* Checkbox */}
@@ -71,17 +112,17 @@ const RecentTasksTable = ({ tasks }) => {
 
                 {/* Task */}
                 <td className="px-3 py-4 text-sm font-medium text-gray-900">
-                  {task.task}
+                  {task.taskName}
                 </td>
 
                 {/* Project */}
                 <td className="px-3 py-4 text-sm text-gray-600">
-                  {task.project}
+                  {task.projectName || task.project}
                 </td>
 
                 {/* Assignee */}
                 <td className="px-3 py-4 text-sm text-gray-600">
-                  {task.assignee}
+                  {task.assign}
                 </td>
 
                 {/* Priority */}
@@ -89,8 +130,13 @@ const RecentTasksTable = ({ tasks }) => {
                   <span
                     className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium ${priorityStyle.bg}`}
                   >
-                    <span className={`h-1.5 w-1.5 rounded-full ${priorityStyle.dot}`}></span>
-                    <span className={priorityStyle.text}>{task.priority}</span>
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${priorityStyle.dot}`}
+                    />
+
+                    <span className={priorityStyle.text}>
+                      {task.priority}
+                    </span>
                   </span>
                 </td>
 
@@ -99,8 +145,13 @@ const RecentTasksTable = ({ tasks }) => {
                   <span
                     className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium ${statusStyle.bg}`}
                   >
-                    <span className={`h-1.5 w-1.5 rounded-full ${statusStyle.dot}`}></span>
-                    <span className={statusStyle.text}>{task.status}</span>
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${statusStyle.dot}`}
+                    />
+
+                    <span className={statusStyle.text}>
+                      {task.status}
+                    </span>
                   </span>
                 </td>
 

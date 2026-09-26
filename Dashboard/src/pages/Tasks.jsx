@@ -1,72 +1,95 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 
 import Header from "../components/Tasks/Header";
 import Table from "../components/Tasks/Table";
 import { TasksSearch } from "../components/Tasks/Search";
 import Filter from "../components/Tasks/Filter";
 
-const tasks = [
-  {
-    id: 1,
-    task: "Fix checkout validation errors",
-    project: "Website Redesign",
-    assignee: "Ayesha Khan",
-    priority: "High",
-    status: "In progress",
-    dueDate: "Sep 25",
-  },
-  {
-    id: 2,
-    task: "Update landing page design",
-    project: "Marketing Website",
-    assignee: "Ali Ahmed",
-    priority: "Medium",
-    status: "In review",
-    dueDate: "Sep 28",
-  },
-  {
-    id: 3,
-    task: "Fix mobile navigation",
-    project: "Mobile App",
-    assignee: "Sara Malik",
-    priority: "Low",
-    status: "Completed",
-    dueDate: "Sep 22",
-  },
-  {
-    id: 4,
-    task: "Implement user authentication",
-    project: "CRM System",
-    assignee: "Hamza Khan",
-    priority: "High",
-    status: "In progress",
-    dueDate: "Oct 2",
-  },
-  {
-    id: 5,
-    task: "Create analytics dashboard",
-    project: "Dashboard Analytics",
-    assignee: "Fatima Noor",
-    priority: "Medium",
-    status: "Todo",
-    dueDate: "Oct 5",
-  },
-];
+import { getAllTasks } from "../services/tasks";
+import { getAllProjects } from "../services/projectapi";
 
 export const Tasks = () => {
-  const [search, setSearch] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [projects, setProjects] = useState([]);
 
+  const [search, setSearch] = useState("");
   const [project, setProject] = useState("");
   const [priority, setPriority] = useState("");
   const [status, setStatus] = useState("");
 
-  const filteredTasks = tasks.filter((task) => {
-    const matchesSearch = task.task
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Fetch tasks + projects
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [tasksData, projectsData] = await Promise.all([
+          getAllTasks(),
+          getAllProjects(),
+        ]);
+
+        console.log("TASKS FROM API:", tasksData);
+        console.log("PROJECTS FROM API:", projectsData);
+
+        if (!tasksData.success) {
+          setError(tasksData.message || "Failed to fetch tasks");
+          return;
+        }
+
+        if (!projectsData.success) {
+          setError(projectsData.message || "Failed to fetch projects");
+          return;
+        }
+
+        setTasks(tasksData.tasks || []);
+        setProjects(projectsData.projects || []);
+      } catch (error) {
+        console.error("Fetch tasks/projects error:", error);
+        setError("Failed to fetch tasks");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Create project ID -> project name lookup
+  const projectMap = useMemo(() => {
+    const map = {};
+
+    projects.forEach((item) => {
+      map[item.id.toString()] = item.projectName;
+    });
+
+    return map;
+  }, [projects]);
+
+  // Add project name to every task
+  const tasksWithProjectName = useMemo(() => {
+    return tasks.map((task) => ({
+      ...task,
+      projectName:
+        projectMap[task.project?.toString()] || "Unknown Project",
+    }));
+  }, [tasks, projectMap]);
+
+  // Filtering
+  const filteredTasks = tasksWithProjectName.filter((task) => {
+    const taskName = task.taskName || "";
+
+    const matchesSearch = taskName
       .toLowerCase()
       .includes(search.toLowerCase());
 
     const matchesProject =
-      project === "" || task.project === project;
+      project === "" ||
+      task.project?.toString() === project.toString();
 
     const matchesPriority =
       priority === "" || task.priority === priority;
@@ -110,25 +133,44 @@ export const Tasks = () => {
           status={status}
           setStatus={setStatus}
           clearFilters={clearFilters}
+          projects={projects}
         />
       </div>
 
-      {/* Tasks Table */}
-      <div className="w-full">
-        {filteredTasks.length === 0 ? (
-          <div className="py-10 text-center">
-            <p className="text-lg font-semibold text-gray-700">
-              No tasks found
-            </p>
+      {/* Loading */}
+      {loading && (
+        <div className="py-10 text-center">
+          <p className="text-sm text-gray-500">
+            Loading tasks...
+          </p>
+        </div>
+      )}
 
-            <p className="mt-1 text-sm text-gray-400">
-              Try changing your search or filters.
-            </p>
-          </div>
-        ) : (
-          <Table tasks={filteredTasks} />
-        )}
-      </div>
+      {/* Error */}
+      {!loading && error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Tasks Table */}
+      {!loading && !error && (
+        <div className="w-full">
+          {filteredTasks.length === 0 ? (
+            <div className="py-10 text-center">
+              <p className="text-lg font-semibold text-gray-700">
+                No tasks found
+              </p>
+
+              <p className="mt-1 text-sm text-gray-400">
+                Try changing your search or filters.
+              </p>
+            </div>
+          ) : (
+            <Table tasks={filteredTasks} />
+          )}
+        </div>
+      )}
     </div>
   );
 };

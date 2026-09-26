@@ -1,15 +1,191 @@
-import React, { useState } from "react";
-import { FiX, FiChevronDown, FiFolder } from "react-icons/fi";
 
-const TaskForm = ({ onClose }) => {
+import React, { useEffect, useState } from "react";
+
+import { createTask } from "../../services/tasks";
+import { getAllProjects } from "../../services/projectapi";
+
+const TaskForm = ({
+  onClose = () => {},
+  onTaskCreated = () => {},
+}) => {
   const [priority, setPriority] = useState("High");
   const [status, setStatus] = useState("Todo");
 
-  return (
-    <div className="w-full max-w-xl rounded-xl bg-white shadow-xl">
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [project, setProject] = useState("");
+  const [assign, setAssign] = useState("");
+  const [dueDate, setDueDate] = useState("");
 
-      {/* Form */}
+  const [projects, setProjects] = useState([]);
+  const [members, setMembers] = useState([]);
+
+  const [loadingProjects, setLoadingProjects] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  // ==============================
+  // Fetch all projects
+  // ==============================
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoadingProjects(true);
+        setError("");
+
+        const data = await getAllProjects();
+
+        console.log("PROJECTS:", data);
+
+        if (data.success) {
+          setProjects(data.projects || []);
+        } else {
+          setError(data.message || "Failed to load projects");
+        }
+      } catch (error) {
+        console.error("Projects fetch error:", error);
+        setError("Failed to load projects");
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // ==============================
+  // Load members when project changes
+  // ==============================
+  useEffect(() => {
+    if (!project) {
+      setMembers([]);
+      setAssign("");
+      return;
+    }
+
+    const selectedProject = projects.find(
+      (item) => item.id?.toString() === project.toString()
+    );
+
+    console.log("SELECTED PROJECT:", selectedProject);
+
+    if (selectedProject?.members) {
+      setMembers(
+        Array.isArray(selectedProject.members)
+          ? selectedProject.members
+          : []
+      );
+    } else {
+      setMembers([]);
+    }
+
+    setAssign("");
+  }, [project, projects]);
+
+  // ==============================
+  // Submit task
+  // ==============================
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+
+    // Validation
+    if (!name.trim()) {
+      setError("Task name is required");
+      return;
+    }
+
+    if (!description.trim()) {
+      setError("Description is required");
+      return;
+    }
+
+    if (!project) {
+      setError("Please select a project");
+      return;
+    }
+
+    if (!assign) {
+      setError("Please select an assignee");
+      return;
+    }
+
+    if (!dueDate) {
+      setError("Please select a due date");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const taskData = {
+        taskName: name.trim(),
+        description: description.trim(),
+
+        // Project ID
+        project,
+
+        // Member/assignee
+        assign,
+
+        priority,
+        status,
+        dueDate,
+      };
+
+      console.log("CREATING TASK:", taskData);
+
+      const data = await createTask(taskData);
+
+      console.log("CREATE TASK RESPONSE:", data);
+
+      // API failed
+      if (!data?.success) {
+        setError(
+          data?.message || "Failed to create task"
+        );
+        return;
+      }
+
+      // ==============================
+      // SUCCESS
+      // ==============================
+
+      console.log("TASK CREATED:", data.task);
+
+      // Tell parent about newly created task
+      onTaskCreated(data.task);
+
+      // Close form
+      onClose();
+
+    } catch (error) {
+      console.error("Create task error:", error);
+
+      setError(
+        error?.message || "Failed to create task"
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="w-full max-w-xl rounded-xl bg-white shadow-xl"
+    >
+      {/* Form content */}
       <div className="space-y-4.5 px-6 py-5">
+
+        {/* Error */}
+        {error && (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
         {/* Task Name */}
         <div className="space-y-1.5">
           <label className="block text-[13px] font-semibold text-gray-700">
@@ -18,8 +194,11 @@ const TaskForm = ({ onClose }) => {
 
           <input
             type="text"
-            defaultValue="Create homepage design"
-            className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Create homepage design"
+            disabled={submitting}
+            className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50"
           />
         </div>
 
@@ -30,35 +209,44 @@ const TaskForm = ({ onClose }) => {
           </label>
 
           <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Add more detail about this task..."
-            className="min-h-16 w-full resize-none rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            disabled={submitting}
+            className="min-h-16 w-full resize-none rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50"
           />
         </div>
 
         {/* Project + Assignee */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
           {/* Project */}
           <div className="space-y-1.5">
             <label className="block text-[13px] font-semibold text-gray-700">
               Project
             </label>
 
-            <button
-              type="button"
-              className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 transition-colors hover:bg-gray-50"
+            <select
+              value={project}
+              onChange={(e) => setProject(e.target.value)}
+              disabled={loadingProjects || submitting}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50"
             >
-              <span className="flex items-center gap-2">
-                <span className="flex size-4.5 items-center justify-center rounded-md bg-blue-50 text-blue-600">
-                  <FiFolder className="text-[11px]" />
-                </span>
+              <option value="">
+                {loadingProjects
+                  ? "Loading projects..."
+                  : "Select project"}
+              </option>
 
-                <span className="text-[13px] text-gray-900">
-                  Website Redesign
-                </span>
-              </span>
-
-              <FiChevronDown className="text-sm text-gray-400" />
-            </button>
+              {projects.map((item) => (
+                <option
+                  key={item.id}
+                  value={item.id}
+                >
+                  {item.projectName}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Assignee */}
@@ -67,22 +255,34 @@ const TaskForm = ({ onClose }) => {
               Assignee
             </label>
 
-            <button
-              type="button"
-              className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 transition-colors hover:bg-gray-50"
+            <select
+              value={assign}
+              onChange={(e) => setAssign(e.target.value)}
+              disabled={!project || submitting}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50"
             >
-              <span className="flex items-center gap-2">
-                <span className="flex size-5 items-center justify-center rounded-full bg-blue-600 text-[9px] font-bold text-white">
-                  A
-                </span>
+              <option value="">
+                {!project
+                  ? "Select project first"
+                  : "Select member"}
+              </option>
 
-                <span className="text-[13px] text-gray-900">
-                  Alex Morgan
-                </span>
-              </span>
+              {members.map((member, index) => {
+                const memberName =
+                  typeof member === "string"
+                    ? member
+                    : member?.name || member?.email || "Unknown member";
 
-              <FiChevronDown className="text-sm text-gray-400" />
-            </button>
+                return (
+                  <option
+                    key={`${memberName}-${index}`}
+                    value={memberName}
+                  >
+                    {memberName}
+                  </option>
+                );
+              })}
+            </select>
           </div>
         </div>
 
@@ -98,6 +298,7 @@ const TaskForm = ({ onClose }) => {
                 key={item}
                 type="button"
                 onClick={() => setPriority(item)}
+                disabled={submitting}
                 className={`flex-1 rounded-lg px-2 py-2 text-xs font-semibold transition-colors ${
                   priority === item
                     ? item === "High"
@@ -119,11 +320,17 @@ const TaskForm = ({ onClose }) => {
           </label>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {["Todo", "In Progress", "Review", "Completed"].map((item) => (
+            {[
+              "Todo",
+              "In Progress",
+              "Review",
+              "Completed",
+            ].map((item) => (
               <button
                 key={item}
                 type="button"
                 onClick={() => setStatus(item)}
+                disabled={submitting}
                 className={`rounded-lg px-2 py-2 text-xs font-semibold transition-colors ${
                   status === item
                     ? "border-[1.5px] border-gray-400 bg-gray-100 text-gray-700"
@@ -144,22 +351,35 @@ const TaskForm = ({ onClose }) => {
 
           <input
             type="date"
-            defaultValue="2026-09-24"
-            className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            disabled={submitting}
+            className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-[13px] text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50"
           />
         </div>
       </div>
 
       {/* Actions */}
       <div className="flex justify-end gap-3 border-t border-gray-200 px-6 py-4">
+
         <button
           type="button"
-          className="cursor-pointer rounded-lg bg-blue-600 px-4.5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-blue-700"
+          onClick={onClose}
+          disabled={submitting}
+          className="rounded-lg border border-gray-200 px-4 py-2.5 text-[13px] font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-50"
         >
-          Create Task
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="cursor-pointer rounded-lg bg-blue-600 px-4.5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {submitting ? "Creating..." : "Create Task"}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
